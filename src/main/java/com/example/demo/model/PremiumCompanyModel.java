@@ -13,7 +13,7 @@ public class PremiumCompanyModel {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String registrationDate;
     
-    private String companyFullAddress;
+    private String fullAddress;
 
     @JsonProperty("isActive")
     private boolean isActive;

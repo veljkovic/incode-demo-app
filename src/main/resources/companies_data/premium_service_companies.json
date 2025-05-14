@@ -1,5 +1,12 @@
 [
   {
+    "companyIdentificationNumber": "F8OY0O0A",
+    "companyName": "Iva test premium",
+    "registrationDate": "2020-09-21",
+    "fullAddress": "5003 Ponce Vista, Port Jenniferborough, MT 45805",
+    "isActive": true
+  },
+  {
     "companyIdentificationNumber": "F8OY0O0W",
     "companyName": "Young, Gomez and Thompson",
     "registrationDate": "2020-09-21",
