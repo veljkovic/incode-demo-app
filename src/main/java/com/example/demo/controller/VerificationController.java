@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/verifications")
-@Tag(name = "Verification", description = "Verification management APIs")
+@Tag(name = "Verification", description = "APIs for managing verifications")
 public class VerificationController {
 
     private final VerificationRepository verificationRepository;
@@ -62,7 +62,7 @@ public class VerificationController {
         }
         
         return verificationRepository.findById(verificationId)
-                .map(verificationMapper::convertVerificationDto)
+                .map(verificationMapper::convertVerificationToDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

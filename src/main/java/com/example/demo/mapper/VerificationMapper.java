@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class VerificationMapper {
     
-    public VerificationDto convertVerificationDto(Verification verification) {
+    public VerificationDto convertVerificationToDto(Verification verification) {
         if (verification == null) {
             return null;
         }
