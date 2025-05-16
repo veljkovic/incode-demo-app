@@ -1,11 +1,11 @@
-package com.example.demo.model;
+package com.example.demo.dto;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
-public class FreeCompanyModel {
+public class FreeCompanyDto {
     private String cin;
     private String name;
     

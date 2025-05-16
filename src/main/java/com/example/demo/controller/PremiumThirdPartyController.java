@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.model.PremiumCompanyModel;
+import com.example.demo.dto.PremiumCompanyDto;
 import com.example.demo.service.PremiumThirdPartyService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,23 +33,18 @@ public class PremiumThirdPartyController {
 
     @Operation(summary = "Search companies by CIN from Premium Service", description = "Searches for companies using the premium third-party service based on the provided CIN query")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Companies found successfully", content = @Content(schema = @Schema(implementation = PremiumCompanyModel.class))),
+            @ApiResponse(responseCode = "200", description = "Companies found successfully", content = @Content(schema = @Schema(implementation = PremiumCompanyDto.class))),
             @ApiResponse(responseCode = "503", description = "Third party service unavailable", content = @Content(schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error or error reading data", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @GetMapping
-    public ResponseEntity<?> getCompanies(
-            @Parameter(description = "Company Identification Number (CIN) to search for", required = true) @RequestParam String query) {
-        try {
-            List<PremiumCompanyModel> result = premiumThirdPartyService.searchCompanies(query);
-            return ResponseEntity.ok(result);
-        } catch (RuntimeException e) {
-            if (e.getMessage().contains("503")) {
-                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Third party service unavailable");
-            }
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error reading data");
-        }
+    public ResponseEntity<List<PremiumCompanyDto>> getCompanies(
+            @Parameter(description = "Company Identification Number (CIN) to search for", required = true) @RequestParam String query)
+            throws IOException {
+
+        List<PremiumCompanyDto> result = premiumThirdPartyService.searchCompanies(query);
+        return ResponseEntity.ok(result);
+
     }
+
 }

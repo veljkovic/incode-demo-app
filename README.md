@@ -1,4 +1,4 @@
-# Spring Boot Demo Project
+# Spring Boot Incode Demo Project
 
 A Spring Boot application that demonstrates REST API development with PostgreSQL database integration.
 
@@ -23,7 +23,7 @@ A Spring Boot application that demonstrates REST API development with PostgreSQL
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/demo.git
+git clone https://github.com/veljkovic/incode-demo-app.git
 cd demo
 ```
 
@@ -33,6 +33,7 @@ docker-compose up --build
 ```
 
 The application will be available at `http://localhost:8080`
+OpenAPI documentation is available at `http://localhost:8080/swagger-ui/index.html#/`
 
 ### Running Locally
 
