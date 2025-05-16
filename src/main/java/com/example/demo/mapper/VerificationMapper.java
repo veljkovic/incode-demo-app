@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class VerificationMapper {
-    
+
     public VerificationDto convertVerificationToDto(Verification verification) {
         if (verification == null) {
             return null;
         }
-        
+
         return VerificationDto.builder()
                 .verificationId(verification.getVerificationId())
                 .queryText(verification.getQueryText())
@@ -21,4 +21,4 @@ public class VerificationMapper {
                 .source(SourceType.valueOf(verification.getSource().name()))
                 .build();
     }
-} 
+}

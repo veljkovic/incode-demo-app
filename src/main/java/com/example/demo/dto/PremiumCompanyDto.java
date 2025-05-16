@@ -12,7 +12,7 @@ public class PremiumCompanyDto {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String registrationDate;
-    
+
     private String fullAddress;
 
     @JsonProperty("isActive")

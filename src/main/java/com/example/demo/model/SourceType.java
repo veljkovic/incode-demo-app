@@ -5,5 +5,6 @@ package com.example.demo.model;
  */
 public enum SourceType {
     FREE,
-    PREMIUM
+    PREMIUM,
+    NONE
 } 

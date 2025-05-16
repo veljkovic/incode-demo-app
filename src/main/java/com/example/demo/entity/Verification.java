@@ -34,11 +34,11 @@ public class Verification {
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 
+    // TODO: see if we can use a more efficient data type for the result
     @NotBlank
-    @Column(name = "result", nullable = false)
+    @Column(name = "result", nullable = false, columnDefinition = "TEXT")
     private String result;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "source", nullable = false)
     private SourceType source;
