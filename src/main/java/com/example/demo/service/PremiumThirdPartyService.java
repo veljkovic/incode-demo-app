@@ -1,10 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.PremiumCompanyDto;
-import com.example.demo.exception.CompanyNotFoundException;
 import com.example.demo.exception.ServiceUnavailableException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -19,7 +20,12 @@ import java.util.stream.Collectors;
 public class PremiumThirdPartyService {
     private static final Logger logger = LoggerFactory.getLogger(PremiumThirdPartyService.class);
     private final Random random = new Random();
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    @Autowired
+    public PremiumThirdPartyService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     public List<PremiumCompanyDto> searchCompanies(String query) throws IOException {
         logger.info("Searching for companies with query: {}", query);
@@ -32,7 +38,7 @@ public class PremiumThirdPartyService {
 
         ClassPathResource resource = new ClassPathResource("companies_data/premium_service_companies.json");
 
-        List<PremiumCompanyDto> companies = mapper.readValue(
+        List<PremiumCompanyDto> companies = objectMapper.readValue(
                 resource.getInputStream(),
                 new TypeReference<>() {
                 });
@@ -42,10 +48,6 @@ public class PremiumThirdPartyService {
         List<PremiumCompanyDto> filteredCompanies = companies.stream()
                 .filter(c -> c.getCompanyIdentificationNumber().contains(query))
                 .collect(Collectors.toList());
-
-        if (filteredCompanies.isEmpty()) {
-            throw new CompanyNotFoundException("No companies found with CIN containing: " + query);
-        }
 
         return filteredCompanies;
     }

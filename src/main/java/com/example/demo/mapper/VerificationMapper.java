@@ -1,8 +1,9 @@
 package com.example.demo.mapper;
 
 import com.example.demo.dto.VerificationDto;
-import com.example.demo.model.SourceType;
 import com.example.demo.entity.Verification;
+import com.example.demo.util.SourceType;
+
 import org.springframework.stereotype.Component;
 
 @Component

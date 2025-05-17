@@ -1,10 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.FreeCompanyDto;
-import com.example.demo.exception.CompanyNotFoundException;
 import com.example.demo.exception.ServiceUnavailableException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -20,7 +21,12 @@ public class FreeThirdPartyService {
 
     private static final Logger logger = LoggerFactory.getLogger(FreeThirdPartyService.class);
     private final Random random = new Random();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    @Autowired
+    public FreeThirdPartyService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     public List<FreeCompanyDto> searchCompanies(String query) throws IOException {
         logger.info("Searching for companies with query: {}", query);
@@ -43,10 +49,6 @@ public class FreeThirdPartyService {
         List<FreeCompanyDto> filteredCompanies = companies.stream()
                 .filter(c -> c.getCin().contains(query))
                 .collect(Collectors.toList());
-
-        if (filteredCompanies.isEmpty()) {
-            throw new CompanyNotFoundException("No companies found with CIN containing: " + query);
-        }
 
         return filteredCompanies;
     }

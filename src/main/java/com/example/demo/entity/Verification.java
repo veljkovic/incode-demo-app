@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.example.demo.model.SourceType;
+import com.example.demo.util.SourceType;
 
 @Entity
 @Data

@@ -13,20 +13,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Tag(name = "Health Check", description = "APIs for checking the application health status")
 public class HealthCheckController {
 
-    @Operation(
-        summary = "Check if the application is running",
-        description = "Returns a simple message indicating that the application is up and running",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Application is running successfully",
-                content = @Content(
-                    mediaType = "text/plain",
-                    schema = @Schema(implementation = String.class)
-                )
-            )
-        }
-    )
+    @Operation(summary = "Check if the application is running", description = "Returns a simple message indicating that the application is up and running", responses = {
+            @ApiResponse(responseCode = "200", description = "Application is running successfully", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
+    })
     @GetMapping("/ping")
     public ResponseEntity<String> ping() {
         return ResponseEntity.ok("The app is running!");

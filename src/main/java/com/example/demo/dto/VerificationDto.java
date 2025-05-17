@@ -1,18 +1,15 @@
 package com.example.demo.dto;
 
 import java.util.UUID;
-import java.time.LocalDateTime;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
+import com.example.demo.util.SourceType;
+
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import com.example.demo.model.SourceType;
 
 @Data
 @Builder
@@ -23,6 +20,7 @@ public class VerificationDto {
     private UUID verificationId;
     private String queryText;
     private LocalDateTime timestamp;
+    //TODO: maybe change type of result
     private String result;
     private SourceType source;
 }
