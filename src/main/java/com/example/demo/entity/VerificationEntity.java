@@ -19,7 +19,7 @@ import com.example.demo.util.SourceType;
 @Table(name = "verifications")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Verification {
+public class VerificationEntity {
 
     @Id
     @NotNull
@@ -34,10 +34,9 @@ public class Verification {
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 
-    // TODO: see if we can use a more efficient data type for the result
-    @NotBlank
-    @Column(name = "result", nullable = false, columnDefinition = "TEXT")
-    private String result;
+    @Convert(converter = JsonConverter.class)
+    @Column(columnDefinition = "TEXT")
+    private ResultEntity<?> result;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "source", nullable = false)
