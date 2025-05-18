@@ -1,7 +1,8 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dto.PremiumCompanyDto;
-import com.example.demo.dto.CompanyDto;
+import com.example.demo.dto.backend.CompanyDto;
+import com.example.demo.dto.tp.PremiumCompanyDto;
+
 import org.springframework.stereotype.Component;
 
 @Component

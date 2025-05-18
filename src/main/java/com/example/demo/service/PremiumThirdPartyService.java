@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.PremiumCompanyDto;
+import com.example.demo.dto.tp.PremiumCompanyDto;
 import com.example.demo.exception.ServiceUnavailableException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

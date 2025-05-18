@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.FreeCompanyDto;
+import com.example.demo.dto.tp.FreeCompanyDto;
 import com.example.demo.service.FreeThirdPartyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

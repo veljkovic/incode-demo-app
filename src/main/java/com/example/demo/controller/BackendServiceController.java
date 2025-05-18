@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.BackendServiceResponse;
+import com.example.demo.dto.backend.BackendServiceResponse;
 import com.example.demo.exception.VerificationAlreadyExistsException;
 import com.example.demo.service.BackendService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +37,7 @@ public class BackendServiceController {
     })
     @GetMapping
     public ResponseEntity<BackendServiceResponse> getCompanies(
-            @Parameter(description = "Verification ID for tracking the request", required = true) @RequestParam UUID verificationId,
+            @Parameter(description = "Verification ID for tracking the request", required = true, example = "123e4567-e89b-12d3-a456-426614174000") @RequestParam UUID verificationId,
             @Parameter(description = "Search query text", required = true) @RequestParam String query)
             throws VerificationAlreadyExistsException, IOException {
         BackendServiceResponse response = backendService.searchCompanies(query, verificationId);
