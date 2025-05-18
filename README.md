@@ -47,3 +47,10 @@ export DB_PASSWORD=postgres
 ```bash
 ./mvnw spring-boot:run
 ```
+
+### Running Tests
+
+To run the test suite:
+```bash
+mvn test
+```
