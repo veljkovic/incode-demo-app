@@ -1,16 +1,18 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.BackendServiceResponse;
-import com.example.demo.dto.CompanyDto;
-import com.example.demo.dto.ErrorBackendServiceResponse;
-import com.example.demo.dto.SuccessBackendServiceResponse;
-import com.example.demo.entity.Verification;
+import com.example.demo.dto.backend.BackendServiceResponse;
+import com.example.demo.dto.backend.CompanyDto;
+import com.example.demo.dto.backend.ErrorBackendServiceResponse;
+import com.example.demo.dto.backend.SuccessBackendServiceResponse;
+import com.example.demo.dto.backend.SuccessBackendServiceResponseWithOtherResults;
+import com.example.demo.entity.VerificationEntity;
+import com.example.demo.entity.ResultEntity;
 import com.example.demo.exception.VerificationAlreadyExistsException;
 import com.example.demo.mapper.FreeCompanyMapper;
 import com.example.demo.mapper.PremiumCompanyMapper;
+import com.example.demo.mapper.VerificationMapper;
 import com.example.demo.repository.VerificationRepository;
 import com.example.demo.util.SourceType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,30 +31,30 @@ public class BackendService {
     private final FreeThirdPartyService freeThirdPartyService;
     private final PremiumThirdPartyService premiumThirdPartyService;
     private final VerificationRepository verificationRepository;
-    private final ObjectMapper objectMapper;
     private final FreeCompanyMapper freeCompanyMapper;
     private final PremiumCompanyMapper premiumCompanyMapper;
+    private final VerificationMapper verificationMapper;
 
     @Autowired
     public BackendService(
             FreeThirdPartyService freeThirdPartyService,
             PremiumThirdPartyService premiumThirdPartyService,
             VerificationRepository verificationRepository,
-            ObjectMapper objectMapper,
             FreeCompanyMapper freeCompanyMapper,
-            PremiumCompanyMapper premiumCompanyMapper) {
+            PremiumCompanyMapper premiumCompanyMapper,
+            VerificationMapper verificationMapper) {
         this.freeThirdPartyService = freeThirdPartyService;
         this.premiumThirdPartyService = premiumThirdPartyService;
         this.verificationRepository = verificationRepository;
-        this.objectMapper = objectMapper;
         this.freeCompanyMapper = freeCompanyMapper;
         this.premiumCompanyMapper = premiumCompanyMapper;
+        this.verificationMapper = verificationMapper;
     }
 
     public BackendServiceResponse searchCompanies(String query, UUID verificationId)
             throws VerificationAlreadyExistsException, IOException {
 
-        if (verificationRepository.findById(verificationId) != null) {
+        if (verificationRepository.findById(verificationId).isPresent()) {
             throw new VerificationAlreadyExistsException(verificationId);
         }
 
@@ -65,7 +66,7 @@ public class BackendService {
                     .collect(Collectors.toList());
 
             if (!freeResults.isEmpty()) {
-                SuccessBackendServiceResponse response = createSuccessResponse(verificationId, query, freeResults);
+                BackendServiceResponse response = createSuccessResponse(verificationId, query, freeResults);
                 storeVerification(verificationId, query, response, SourceType.FREE);
                 return response;
             }
@@ -81,7 +82,7 @@ public class BackendService {
                     .collect(Collectors.toList());
 
             if (!premiumResults.isEmpty()) {
-                SuccessBackendServiceResponse response = createSuccessResponse(verificationId, query,
+                BackendServiceResponse response = createSuccessResponse(verificationId, query,
                         premiumResults);
                 storeVerification(verificationId, query, response, SourceType.PREMIUM);
                 return response;
@@ -100,17 +101,24 @@ public class BackendService {
         }
     }
 
-    private SuccessBackendServiceResponse createSuccessResponse(UUID verificationId, String query,
+    private BackendServiceResponse createSuccessResponse(UUID verificationId, String query,
             List<CompanyDto> results) {
         CompanyDto firstResult = results.get(0);
-        List<CompanyDto> otherResults = results.size() > 1 ? results.subList(1, results.size()) : new ArrayList<>();
 
-        SuccessBackendServiceResponse response = new SuccessBackendServiceResponse();
-        response.setVerificationId(verificationId);
-        response.setQuery(query);
-        response.setResult(firstResult);
-        response.setOtherResults(otherResults);
-        return response;
+        if (results.size() > 1) {
+            SuccessBackendServiceResponseWithOtherResults response = new SuccessBackendServiceResponseWithOtherResults();
+            response.setVerificationId(verificationId);
+            response.setQuery(query);
+            response.setResult(firstResult);
+            response.setOtherResults(results.subList(1, results.size()));
+            return response;
+        } else {
+            SuccessBackendServiceResponse response = new SuccessBackendServiceResponse();
+            response.setVerificationId(verificationId);
+            response.setQuery(query);
+            response.setResult(firstResult);
+            return response;
+        }
     }
 
     private ErrorBackendServiceResponse createErrorResponse(UUID verificationId, String query, String errorMessage) {
@@ -124,10 +132,12 @@ public class BackendService {
     private void storeVerification(UUID verificationId, String query, BackendServiceResponse response,
             SourceType source) {
         try {
-            Verification verification = Verification.builder()
+            ResultEntity<?> resultEntity = verificationMapper.mapToResultEntity(response);
+
+            VerificationEntity verification = VerificationEntity.builder()
                     .verificationId(verificationId)
                     .queryText(query)
-                    .result(objectMapper.writeValueAsString(response))
+                    .result(resultEntity)
                     .source(source)
                     .timestamp(LocalDateTime.now())
                     .build();

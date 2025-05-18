@@ -17,14 +17,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = VerificationSuccessResponse.class, name = "success"),
         @JsonSubTypes.Type(value = VerificationSuccessResponseWithOtherResults.class, name = "success_with_other_results"),
         @JsonSubTypes.Type(value = VerificationErrorResponse.class, name = "error")
 })
 public abstract class VerificationResponse {
-
     private UUID verificationId;
     private String queryText;
     private LocalDateTime timestamp;

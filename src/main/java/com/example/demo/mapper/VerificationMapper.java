@@ -12,9 +12,14 @@ import com.example.demo.entity.VerificationEntity;
 import com.example.demo.entity.CompanyEntity;
 import com.example.demo.util.SourceType;
 import com.example.demo.dto.backend.CompanyDto;
+import com.example.demo.dto.backend.BackendServiceResponse;
+import com.example.demo.dto.backend.ErrorBackendServiceResponse;
+import com.example.demo.dto.backend.SuccessBackendServiceResponse;
+import com.example.demo.dto.backend.SuccessBackendServiceResponseWithOtherResults;
 
 import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
+import java.util.List;
 
 @Component
 public class VerificationMapper {
@@ -69,5 +74,52 @@ public class VerificationMapper {
         }
         
         return null;
+    }
+
+    public ResultEntity<?> mapToResultEntity(BackendServiceResponse response) {
+        if (response instanceof SuccessBackendServiceResponseWithOtherResults) {
+            return mapToSuccessResultWithOtherResults((SuccessBackendServiceResponseWithOtherResults) response);
+        } else if (response instanceof SuccessBackendServiceResponse) {
+            return mapToSuccessResult((SuccessBackendServiceResponse) response);
+        } else if (response instanceof ErrorBackendServiceResponse) {
+            return mapToErrorResult((ErrorBackendServiceResponse) response);
+        } else {
+            throw new IllegalArgumentException("Unknown response type: " + response.getClass().getName());
+        }
+    }
+
+    private SuccessResultEntityWithOtherResults mapToSuccessResultWithOtherResults(SuccessBackendServiceResponseWithOtherResults response) {
+        CompanyEntity mainResult = mapToCompanyEntity(response.getResult());
+        List<CompanyEntity> otherResults = response.getOtherResults().stream()
+                .map(this::mapToCompanyEntity)
+                .collect(Collectors.toList());
+
+        SuccessResultEntityWithOtherResults successResultEntity = new SuccessResultEntityWithOtherResults();
+        successResultEntity.setResult(mainResult);
+        successResultEntity.setOtherResults(otherResults);
+        return successResultEntity;
+    }
+
+    private SuccessResultEntity mapToSuccessResult(SuccessBackendServiceResponse response) {
+        CompanyEntity companyEntity = mapToCompanyEntity(response.getResult());
+        SuccessResultEntity successResultEntity = new SuccessResultEntity();
+        successResultEntity.setResult(companyEntity);
+        return successResultEntity;
+    }
+
+    private ErrorResultEntity mapToErrorResult(ErrorBackendServiceResponse response) {
+        ErrorResultEntity errorResultEntity = new ErrorResultEntity();
+        errorResultEntity.setResult(response.getResult());
+        return errorResultEntity;
+    }
+
+    private CompanyEntity mapToCompanyEntity(CompanyDto dto) {
+        return CompanyEntity.builder()
+                .cin(dto.getCin())
+                .name(dto.getName())
+                .registrationDate(dto.getRegistrationDate())
+                .address(dto.getAddress())
+                .isActive(dto.isActive())
+                .build();
     }
 }

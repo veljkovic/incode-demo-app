@@ -12,15 +12,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    property = "type",
-    visible = true
-)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = SuccessBackendServiceResponse.class, name = "success"),
-    @JsonSubTypes.Type(value = SuccessBackendServiceResponseWithOtherResults.class, name = "success_with_other_results"),
-    @JsonSubTypes.Type(value = ErrorBackendServiceResponse.class, name = "error")
+        @JsonSubTypes.Type(value = SuccessBackendServiceResponse.class, name = "success"),
+        @JsonSubTypes.Type(value = SuccessBackendServiceResponseWithOtherResults.class, name = "success_with_other_results"),
+        @JsonSubTypes.Type(value = ErrorBackendServiceResponse.class, name = "error")
 })
 abstract public class BackendServiceResponse {
     private UUID verificationId;
