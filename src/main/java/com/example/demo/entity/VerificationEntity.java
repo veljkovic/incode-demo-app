@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.example.demo.model.SourceType;
+import com.example.demo.util.SourceType;
 
 @Entity
 @Data
@@ -19,7 +19,7 @@ import com.example.demo.model.SourceType;
 @Table(name = "verifications")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Verification {
+public class VerificationEntity {
 
     @Id
     @NotNull
@@ -34,11 +34,10 @@ public class Verification {
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 
-    @NotBlank
-    @Column(name = "result", nullable = false)
-    private String result;
+    @Convert(converter = JsonConverter.class)
+    @Column(columnDefinition = "TEXT")
+    private ResultEntity<?> result;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "source", nullable = false)
     private SourceType source;
