@@ -1,12 +1,16 @@
-package com.example.demo.dto;
+package com.example.demo.dto.backend;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SuccessBackendServiceResponse extends BackendServiceResponse {
     private CompanyDto result;
-    private List<CompanyDto> otherResults;
 }
